@@ -2,61 +2,67 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:phar/screens/constant.dart';
 import 'package:phar/screens/info_screen.dart';
-import 'package:phar/screens/info_screen.dart';
 
-class MyHeader extends StatefulWidget {
+class MyHeader1 extends StatefulWidget {
   final String image;
   final String textTop;
   final String textBottom;
   final double offset;
-  const MyHeader(
-      {Key key, this.image, this.textTop, this.textBottom, this.offset})
+  final IconData topRightIcon;
+  final IconData topLeftIcon;
+
+  final Color iconColor;
+  final VoidCallback onIconTap;
+
+  const MyHeader1(
+      {Key key, this.image, this.textTop, this.textBottom, this.offset, this.topRightIcon,this.topLeftIcon, this.iconColor = Colors.white, this.onIconTap,
+      })
       : super(key: key);
 
   @override
-  _MyHeaderState createState() => _MyHeaderState();
+  _MyHeader1State createState() => _MyHeader1State();
 }
-class _MyHeaderState extends State<MyHeader> {
+
+class _MyHeader1State extends State<MyHeader1> {
   @override
   Widget build(BuildContext context) {
     return ClipPath(
       clipper: MyClipper(),
       child: Container(
-        padding: EdgeInsets.only(left: 5, top:20, right: 5),
+        padding: EdgeInsets.only(left: 50, top:50, right: 20),
         height: 350,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
+            begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors:
             [
               Colors.teal[700],
-              Colors.teal[200],
+              Colors.teal[400],
               Colors.white,
             ],
           ),
           image: DecorationImage(
             image: AssetImage("assets/ma11.png"),
-
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            /*Align(
+
+
+
+            Align(
               alignment: Alignment.topLeft,
               child: GestureDetector(
-                child: Icon(Icons.clear_all, color: Colors.white,size: 35,),
-                onTap: () {
-                 setState(() {
-
-                 });
-                },
-
+                child: Icon(widget.topLeftIcon, color: widget.iconColor,size: 30,),
+                onTap: widget.onIconTap,
               ),
-            ),*/
-            SizedBox(height: 20),
+            ),
+
+
+            SizedBox(height: 10),
             Expanded(
               child: Stack(
                 children: <Widget>[
@@ -64,24 +70,23 @@ class _MyHeaderState extends State<MyHeader> {
                     top: (widget.offset < 0) ? 0 : widget.offset,
                     child: Image.asset(
                       widget.image,
-                      width: 170,
+                      width: 150,
                       fit: BoxFit.fitWidth,
                       alignment: Alignment.topLeft,
                     ),
                   ),
                   Positioned(
-                    top: 90- widget.offset / 2,
-                    left: 180,
-
+                    top: 50 - widget.offset / 2,
+                    left: 150,
                     child: Text(
                       "${widget.textTop} \n${widget.textBottom}",
                       style: kHeadingTextStyle.copyWith(
                         color: Colors.white,
-                        fontSize:17.0,
+                        fontSize: 20.00,
                       ),
                     ),
                   ),
-                  Container(),
+                  Container(), //
                 ],
               ),
             ),

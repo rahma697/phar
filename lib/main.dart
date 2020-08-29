@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-/*import 'package:phar/screens/note_list.dart';
-import 'package:phar/screens/note_detail.dart';*/
-import 'package:phar/screens/note_list.dart';
+/*import 'package:phar/screens/medicament_list.dart';
+import 'package:phar/screens/medicament_detail.dart';*/
+import 'package:phar/screens/medicament_list.dart';
+import 'package:phar/utils/database_helper.dart';
+
+import 'screens/login_screen.dart';
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // ===== wait database to initialize;
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  await databaseHelper.database;
+  //=========================================
   runApp(MyApp());
 }
 
@@ -20,7 +28,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.teal
       ),
 
-      home: NoteList(),
+      home: LoginPage(),
     );
   }
 }

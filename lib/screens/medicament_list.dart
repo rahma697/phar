@@ -1,29 +1,30 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:phar/screens/calcul.dart';
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
-import 'package:phar/models/note.dart';
-import 'package:phar/screens/note_detail.dart';
+import 'package:phar/models/medicament.dart';
+import 'package:phar/screens/medicament_detail.dart';
 import 'package:phar/utils/database_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
-class NoteList extends StatefulWidget {
+class MedicamentList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return NoteListState();
+    return MedicamentListState();
   }
 }
 
-class NoteListState extends State<NoteList> {
+class MedicamentListState extends State<MedicamentList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
-  List<medecament> noteList;
+  List<Medicament> medicamentList;
   int count = 0;
   int currentTab=0;
   @override
   Widget build(BuildContext context) {
-    if (noteList == null) {
-      noteList = List<medecament>();
+    if (medicamentList == null) {
+      medicamentList = List<Medicament>();
       updateListView();
     }
 
@@ -66,7 +67,7 @@ class NoteListState extends State<NoteList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
 
-          navigateToDetail(medecament('', '', 0, 0, ''), 'Add Medicine', 554);
+          navigateToDetail(Medicament('', '', 0, 0, ''), 'Add Medicine', 554);
         },
         tooltip: 'Add a Medicine',
         child: Icon(Icons.add),
@@ -120,6 +121,9 @@ class NoteListState extends State<NoteList> {
                       MaterialButton(
                         minWidth: 40,
                         onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => CalculPage()));
+
                           setState(() {
                             // if user taps on this dashboard tab will be active
                             currentTab = 2;
@@ -128,12 +132,14 @@ class NoteListState extends State<NoteList> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+
                             Icon(
-                              Icons.search,
+
+                              Icons.content_paste,
                               color: currentTab == 2 ? Colors.teal[700] : Colors.grey[700],
                             ),
                             Text(
-                              'Search',
+                              'Calculate',
                               style: TextStyle(
                                 color: currentTab == 2 ? Colors.teal[700]: Colors.grey[700],fontSize: 15,
                               ),
@@ -170,12 +176,12 @@ class NoteListState extends State<NoteList> {
           child: ListTile(
             leading: Image.asset('assets/rahma5.png'),
             title: Text(
-              this.noteList[position].title,
+              this.medicamentList[position].title,
               style: titleStyle,
             ),
             subtitle: Row(
               children: <Widget>[
-                Text(this.noteList[position].date),
+                Text(this.medicamentList[position].date),
               ],
             ),
             trailing: GestureDetector(
@@ -184,11 +190,11 @@ class NoteListState extends State<NoteList> {
                 color: Colors.grey,
               ),
               onTap: () {
-                _delete(context, noteList[position]);
+                _delete(context, medicamentList[position]);
               },
             ),
             onTap: () {
-              navigateToDetail(this.noteList[position], '', 2);
+              navigateToDetail(this.medicamentList[position], '', 2);
             },
           ),
         );
@@ -211,7 +217,7 @@ class NoteListState extends State<NoteList> {
     }
   }
 
-  void _delete(BuildContext context, medecament note) async {
+  void _delete(BuildContext context, Medicament note) async {
     int result = await databaseHelper.deleteMedecament(note.id);
     if (result != 0) {
       _showSnackBar(context, 'Medicine Deleted Successfully');
@@ -224,7 +230,7 @@ class NoteListState extends State<NoteList> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  void navigateToDetail(medecament note, String title, int pres) async {
+  void navigateToDetail(Medicament note, String title, double pres) async {
     bool result =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return NoteDetail(note, title);
@@ -237,10 +243,10 @@ class NoteListState extends State<NoteList> {
 
 //
   void updateListView() {
-    Future<List<medecament>> noteListFuture = databaseHelper.getmedecamentList();
+    Future<List<Medicament>> noteListFuture = databaseHelper.getMedecamentList();
     noteListFuture.then((noteList) {
       setState(() {
-        this.noteList = noteList;
+        this.medicamentList = noteList;
         this.count = noteList.length;
       });
     });
