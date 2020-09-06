@@ -97,7 +97,7 @@ class DatabaseHelper {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + 'pharmacal.db';
 
-    if (kDebugMode) deleteDatabase(path);
+//    if (kDebugMode) deleteDatabase(path);
 
     // Open/create the database at a given path
     var notesDatabase =
@@ -153,8 +153,8 @@ class DatabaseHelper {
           '$_ordonnace_colPatient INTEGER NOT NULL, $_ordonnace_colMedicament INTEGER NOT NULL, '
           '$_ordonnace_coldosage INTEGER, $_ordonnace_colvolum_a_adminitrer INTEGER, '
           '$_ordonnace_colreliquat INTEGER, $_ordonnace_type_poche INTEGER, '//jed virgule radi rani sure
-          'FOREIGN KEY($_ordonnace_colMedicament) REFERENCES $_medicamentTable($_colId), '
-          'FOREIGN KEY($_ordonnace_colPatient) REFERENCES $_patient_Table($_colId))'
+          'FOREIGN KEY($_ordonnace_colMedicament) REFERENCES $_medicamentTable($_colId) ON DELETE CASCADE, '
+          'FOREIGN KEY($_ordonnace_colPatient) REFERENCES $_patient_Table($_colId) ON DELETE CASCADE)'
       ,
     );
 
@@ -171,16 +171,7 @@ class DatabaseHelper {
     );
     //**********************************************************************************************************
   }
-  // Fetch Operation: Get all note objects from database
-  Future<List<Map<String, dynamic>>> getmedecamentMapList({bool reliquat = false}) async {
-    Database db = await this.database;
-    var result;
-    if (!reliquat) result = await db.query(_medicamentTable);
-    if (reliquat) result = await db.query(_medicamentTable, where: '$_medicamentcol_reliquat > 0');
-    print("List Medecament ${result.length}");
-    return result;
 
-  }
 
   Future<List<Map<String, dynamic>>> getPatientMapList() async {
     Database db = await this.database;
@@ -228,14 +219,22 @@ class DatabaseHelper {
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Note List' [ List<Note> ]
   Future<List<Medicament>> getMedecamentList({bool reliquat = false}) async {
-    var noteMapList = await getmedecamentMapList(reliquat: reliquat); // Get 'Map List' from database
-    int count =
-        noteMapList.length; // Count the number of map entries in db table
+
+    Database db = await this.database;
+    var medicamentMapList;
+    if (!reliquat) medicamentMapList = await db.query(_medicamentTable);
+    if (reliquat) medicamentMapList = await db.query(_medicamentTable, where: '$_medicamentcol_reliquat > 0');
+    print("la taille ta3 List Medecament ${medicamentMapList.length}");
+    print(medicamentMapList.toString());
+
+    int count = medicamentMapList.length; // Count the number of map entries in db table
 
     List<Medicament> medecamentList = List<Medicament>();
-    // For loop to create a 'Note List' from a 'Map List'
+    // For loop to create a 'Medicament List' from a 'Map List'
     for (int i = 0; i < count; i++) {
-      medecamentList.add(Medicament.fromMapObject(noteMapList[i]));
+      Map<String, dynamic> medicamentMap = medicamentMapList[i];
+      Medicament medicament = Medicament.fromMapObject(medicamentMap);
+      medecamentList.add(medicament);
     }
 
     return medecamentList;

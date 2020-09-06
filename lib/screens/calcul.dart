@@ -17,6 +17,7 @@ class _CalculPageState extends State<CalculPage> {
   ];
 
   DatabaseHelper databaseHelper = DatabaseHelper();
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   //Controllers - Textfields
   TextEditingController _laboController = TextEditingController();
@@ -57,6 +58,7 @@ class _CalculPageState extends State<CalculPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
+      key: scaffoldKey,
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -199,7 +201,7 @@ class _CalculPageState extends State<CalculPage> {
                             labelText: "Prestentation",
                             border: OutlineInputBorder(),
                           ),
-                          controller: _presentationcontroller ,
+                          controller: 56 ,
                           enabled: false,
                         ),*/
                         SizedBox(
@@ -334,7 +336,7 @@ class _CalculPageState extends State<CalculPage> {
         if (_rest > 0){
           //mazal volume lazem nakhadmoh, y7al flacon jdod
           print(" LE RESTE >>>>>> 0 ");
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text("We will use ALL the reliquat")));
+          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("We will use ALL the reliquat")));
           volume = volume - currentSelectedMedicament.reliquat;
           _calculeVolumeAndReliquat();
 
@@ -342,7 +344,7 @@ class _CalculPageState extends State<CalculPage> {
         } else if (_rest == 0){
           //reliquat tekfi bach nakhadmi volume hada
           print("LE  RESTE  ===========0");
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text("We will use ALL the reliquat, reste = 0 ")));
+          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("We will use ALL the reliquat, reste = 0 ")));
           //update reliquat f la base de donnee
           currentSelectedMedicament.reliquat = 0;
           //
@@ -396,7 +398,14 @@ class _CalculPageState extends State<CalculPage> {
       await databaseHelper.updateMedecament(currentSelectedMedicament);
 
 
-      if (result>0) print("yeeees");
+      if (result>0) {
+        print("yeeees");
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => DetailPage(
+          patient: currentSelectedPatient,
+          medicament: currentSelectedMedicament,
+          ordonnance: _ordonnance,
+        ),),);
+      }
 
 
     }
@@ -404,7 +413,7 @@ class _CalculPageState extends State<CalculPage> {
 
   void _calculeVolumeAndReliquat() {
     //Calcule ta3 reliquat, tji after we check if there is some previous reliquat
-    double reliquat = currentSelectedMedicament.vol - volume;
+    double reliquat = currentSelectedMedicament.volumInitial - volume;
 
 
 
@@ -414,7 +423,7 @@ class _CalculPageState extends State<CalculPage> {
       newReliquat = reliquat;
     }else{
       print("Reliquat is <<<< 0");
-      double resultOf9isma =(double.parse((_volumfinalController.text))) / currentSelectedMedicament.vol;
+      double resultOf9isma = volume / currentSelectedMedicament.volumInitial;
       //print("reliquat dakheel  else is $reliquat");
       if((resultOf9isma % 1)==0){// reliquat is an integer
         print("nombre de flacon utilisé $resultOf9isma");
@@ -425,15 +434,15 @@ class _CalculPageState extends State<CalculPage> {
         double fraction = reliquat - reliquat.truncate();
         print("flacon $reliquat");
         //truncate() function for double type which returns the integer part discarding the fractional part.
-        double tahwil= fraction*currentSelectedMedicament.vol;
-        reliquat = currentSelectedMedicament.vol - tahwil;
+        double tahwil= fraction*currentSelectedMedicament.volumInitial;
+        reliquat = currentSelectedMedicament.volumInitial - tahwil;
         print( "reliquat final $reliquat");
 
 //        print("srface ${currentSelectedPatient.surface}");
 //        print("c_minimal ${currentSelectedMedicament.cmn} ");
 //        print("c_maximal ${currentSelectedMedicament.cmx}");
         print("tahwil $tahwil");
-        print("vvol ${currentSelectedMedicament.vol}");
+        print("vvol ${currentSelectedMedicament.volumInitial}");
 
       }
       _reliquatContoller.text = reliquat.toString();
@@ -456,8 +465,7 @@ class _CalculPageState extends State<CalculPage> {
       _ordonnance.type_poche = 500;
     } else {
       //Sinn
-      //TODO: mazalet cas lakhra ta3 sinn f volume a administrer: sinn calculer le volume das le quel
-      _ordonnance.type_poche = 2000;
+      _ordonnance.type_poche = 1000;
 
     }
   }

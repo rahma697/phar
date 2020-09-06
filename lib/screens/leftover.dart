@@ -22,7 +22,6 @@ class ListState extends State<leftoverList> {
 
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Medicament> medReliquatList;
-  Leftover _leftover = Leftover();
 
   int count = 0;
   int currentTab=0;
@@ -164,6 +163,11 @@ class ListState extends State<leftoverList> {
         DateTime reliqDate = DateTime.parse(medReliquatList[position].reliquatDate);
         DateTime premptionDate = reliqDate.add(Duration(hours: medReliquatList[position].sta.toInt()));
         String formattedDate = DateFormat("dd/MM/yyyy hh:mm:ss").format(premptionDate);
+        double reliquatPercentage = medReliquatList[position].reliquat / medReliquatList[position].volumInitial;
+        print("reliquatpercanetage = $reliquatPercentage");
+        print("vol = ${medReliquatList[position].volumInitial}");
+        print("");
+
         return Card(
           color: Colors.white,
           elevation: 2.0,
@@ -173,7 +177,19 @@ class ListState extends State<leftoverList> {
               "${medReliquatList[position].title.toString()} - ${medReliquatList[position].reliquat} ml",
               style: titleStyle,
             ),
-            subtitle: Text("Péremption : $formattedDate"),
+            subtitle: Column(
+              children: <Widget>[
+                Text("Péremption : $formattedDate"),
+                Row(
+                  children: <Widget>[
+                    Text("Price : "),
+                    //prix reprent ta3 dwa ( flacon fih 10ml prix 100 da,
+                    //
+                    Text("${medReliquatList[position].prix * reliquatPercentage } DA"),
+                  ],
+                )
+              ],
+            ),
             trailing: GestureDetector(
               child: Icon(
                 Icons.delete,

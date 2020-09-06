@@ -9,7 +9,7 @@ class Medicament {
   double _ci;
   double _cmn;
   double _cmx;
-  double _vol;
+  double _volInitial;
   double _prix;
   double _sta;
   double _reliquat;
@@ -30,7 +30,7 @@ class Medicament {
   double get ci => _ci;
   double get cmn => _cmn;
   double get cmx => _cmx;
-  double get vol => _vol;
+  double get volumInitial => _volInitial;
   double get prix=> _prix;
   double get sta =>_sta;
   double get reliquat =>_reliquat;
@@ -90,9 +90,9 @@ class Medicament {
     }
   }
 
-  set vol(double newvol) {
+  set volumInitial(double newvol) {
     if (newvol <= 1000 ) {
-      this._vol = newvol;
+      this._volInitial = newvol;
     }
   }
 
@@ -129,7 +129,7 @@ class Medicament {
     map['ci']=_ci;
     map['cmn']=_cmn;
     map['cmx']=_cmx;
-    map['vol']=_vol;
+    map['vol']=_volInitial;
     map['prix']=_prix;
     map['sta']=_sta;
     map['reliquat']=_reliquat;
@@ -150,7 +150,7 @@ class Medicament {
     this._ci=double.parse(map['ci'].toString());
     this._cmn=double.parse(map['cmn'].toString());
     this._cmx=double.parse(map['cmx'].toString());
-    this._vol=double.parse(map['vol'].toString());
+    this._volInitial=double.parse(map['vol'].toString());
     this._prix=double.parse(map['prix'].toString());
     this._sta=double.parse(map['sta'].toString());
     this._reliquat= double.parse(map['reliquat'].toString() ?? 0);

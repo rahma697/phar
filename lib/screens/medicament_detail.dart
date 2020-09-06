@@ -52,7 +52,7 @@ class NoteDetailState extends State<NoteDetail> {
     ciController.text = note.ci?.toString();
     cmnConroller.text=note.cmn?.toString();
     cmxController.text=note.cmx?.toString();
-    volController.text=note.cmx?.toString();
+    volController.text=note.volumInitial?.toString();
     prixController.text=note.prix?.toString();
     staController.text=note.sta?.toString();
     medicament_reliquatController.text=note.reliquat?.toString() ?? "0";
@@ -404,7 +404,7 @@ class NoteDetailState extends State<NoteDetail> {
     note.cmx=double.parse(cmxController.text.toString());
   }
   void updatevol(){
-    note.vol=double.parse(volController.text.toString());
+    note.volumInitial=double.parse(volController.text.toString());
   }
   void updateprix(){
     note.prix=double.parse(prixController.text.toString());
