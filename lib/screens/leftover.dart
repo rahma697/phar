@@ -185,7 +185,7 @@ class ListState extends State<leftoverList> {
                     Text("Price : "),
                     //prix reprent ta3 dwa ( flacon fih 10ml prix 100 da,
                     //
-                    Text("${medReliquatList[position].prix * reliquatPercentage } DA"),
+                    Text("${(medReliquatList[position].prix * reliquatPercentage).toStringAsFixed(2) } DA"),
                   ],
                 )
               ],

@@ -47,16 +47,7 @@ class CustomDrawer extends StatelessWidget {
             height: 1,
             color: Colors.grey,
           ),
-          ListTile(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => ChangeUserNamePage()));
-            },
-            leading: Icon(Icons.border_color),
-            title: Text("Change the code"),
-          ),
+         
 
           Divider(
             height: 1,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:phar/models/patient.dart';
 import 'dart:async';
@@ -40,6 +42,8 @@ class PatientDetailState extends State<PatientDetail> {
 
     return  Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       body:Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -68,7 +72,7 @@ class PatientDetailState extends State<PatientDetail> {
             Container(
               margin: EdgeInsets.only(
                   left: 190.0, right: 30.0, top: 70.0, bottom: 60.0),
-              child: Image.asset("assets/pat.png"),
+              child: Image.asset("assets/patient.png"),
             ),
             Container(
               margin: EdgeInsets.only(
@@ -134,8 +138,8 @@ class PatientDetailState extends State<PatientDetail> {
                              updateheight();
                            },
                            decoration: InputDecoration(
-                             hintText: "Height (m)",
-                             labelText: "Height (m)",
+                             hintText: "Height (cm)",
+                             labelText: "Height (cm)",
                              hintStyle: TextStyle(color: Colors.grey[600]),
                            ),
                          ),
@@ -148,8 +152,8 @@ class PatientDetailState extends State<PatientDetail> {
                              updateWeight();
                            },
                            decoration: InputDecoration(
-                             hintText: "Weight(m)",
-                             labelText: "Weight (m)",
+                             hintText: "Weight(kg)",
+                             labelText: "Weight (kg)",
                              hintStyle: TextStyle(color: Colors.grey[600]),
 
                            ),
@@ -159,9 +163,7 @@ class PatientDetailState extends State<PatientDetail> {
                            controller: bodysurfaceContoller,
                            style: textStyle,
                            keyboardType: TextInputType.number,
-                           onChanged: (value) {
-                             updatesurface();
-                           },
+                           enabled: false,
                            decoration: InputDecoration(
                              hintText: "Body surface",
                              labelText: "Body surface (m2)",
@@ -209,7 +211,31 @@ class PatientDetailState extends State<PatientDetail> {
   // Update the description of Note object
   void updateheight() {
     patient.height = double.parse(heightContoller.text.toString());
+    updatesurface();
   }
+  void updateWeight(){
+    patient.weight =double.parse(weightContoller.text.toString());
+    updatesurface();
+  }
+  void updatesurface(){
+    if(double.parse(heightContoller.text.toString()) > 0 && double.parse(weightContoller.text.toString()) > 0 ){
+      /*
+      SC = racine carrée du (poids x taille)/3600
+       */
+      double poids = double.parse(weightContoller.text.toString());
+      double taille = double.parse(heightContoller.text.toString());
+      //calcul ta3 surface
+      String surface = sqrt((poids * taille) / 3600).toStringAsFixed(2);
+
+
+      //save
+      patient.surface = double.parse(surface);
+      bodysurfaceContoller.text = surface.toString();
+    }
+
+  }
+
+
   // Save data to database
   void _save() async {
     //Checks for fields
@@ -273,13 +299,6 @@ class PatientDetailState extends State<PatientDetail> {
         builder: (_) => alertDialog
     );
   }
-// Update the concentration of Note object
-  void updateWeight(){
-    //check if the input is numbers only
-    patient.weight =double.parse(weightContoller.text.toString());
-  }
-  void updatesurface(){
-    patient.surface=double.parse(bodysurfaceContoller.text.toString());
-  }
+
 
 }

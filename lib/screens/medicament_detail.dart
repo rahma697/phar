@@ -47,7 +47,7 @@ class NoteDetailState extends State<NoteDetail> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
     titleController.text = note.title;
-    descriptionController.text = note.description;
+    descriptionController.text = note.laboratoire;
     presContoller.text = note.pres?.toString() ;
     ciController.text = note.ci?.toString();
     cmnConroller.text=note.cmn?.toString();
@@ -60,6 +60,8 @@ class NoteDetailState extends State<NoteDetail> {
 
     return  Scaffold(
           key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
 
           body: Container(
             width: double.infinity,

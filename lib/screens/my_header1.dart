@@ -1,35 +1,34 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:phar/screens/constant.dart';
+import 'package:phar/screens/homescreen.dart';
 import 'package:phar/screens/info_screen.dart';
 
-class MyHeader1 extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'homescreen.dart';
+
+class Myheader extends StatefulWidget {
   final String image;
   final String textTop;
   final String textBottom;
   final double offset;
-  final IconData topRightIcon;
-  final IconData topLeftIcon;
-
-  final Color iconColor;
-  final VoidCallback onIconTap;
-
-  const MyHeader1(
-      {Key key, this.image, this.textTop, this.textBottom, this.offset, this.topRightIcon,this.topLeftIcon, this.iconColor = Colors.white, this.onIconTap,
-      })
+  const Myheader(
+      {Key key, this.image, this.textTop, this.textBottom, this.offset})
       : super(key: key);
 
   @override
-  _MyHeader1State createState() => _MyHeader1State();
+  _MyheaderState createState() => _MyheaderState();
 }
 
-class _MyHeader1State extends State<MyHeader1> {
+class _MyheaderState extends State<Myheader> {
   @override
   Widget build(BuildContext context) {
     return ClipPath(
       clipper: MyClipper(),
       child: Container(
-        padding: EdgeInsets.only(left: 50, top:50, right: 20),
+        padding: EdgeInsets.only(left: 40, top: 50, right: 20),
         height: 350,
         width: double.infinity,
         decoration: BoxDecoration(
@@ -44,51 +43,58 @@ class _MyHeader1State extends State<MyHeader1> {
             ],
           ),
           image: DecorationImage(
-            image: AssetImage("assets/ma11.png"),
+            image: AssetImage("assets/virus.png"),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        child:Stack(
           children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(left: 1.0, top: 0.0),
+                    child: IconButton(icon: Icon(Icons.arrow_back_ios,  color: Colors.white),
 
-
-
-            Align(
-              alignment: Alignment.topLeft,
-              child: GestureDetector(
-                child: Icon(widget.topLeftIcon, color: widget.iconColor,size: 30,),
-                onTap: widget.onIconTap,
-              ),
-            ),
-
-
-            SizedBox(height: 10),
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: (widget.offset < 0) ? 0 : widget.offset,
-                    child: Image.asset(
-                      widget.image,
-                      width: 150,
-                      fit: BoxFit.fitWidth,
-                      alignment: Alignment.topLeft,
-                    ),
-                  ),
-                  Positioned(
-                    top: 50 - widget.offset / 2,
-                    left: 150,
-                    child: Text(
-                      "${widget.textTop} \n${widget.textBottom}",
-                      style: kHeadingTextStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: 20.00,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return HomeScreen();
+                              },
+                            ),
+                          );
+                        }
+                    )
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: (widget.offset < 0) ? 0 : widget.offset,
+                        child: Image.asset(
+                          widget.image,
+                          width: 170,
+                          fit: BoxFit.fitWidth,
+                          alignment: Alignment.topLeft,
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        top: 20 - widget.offset / 2,
+                        left: 160,
+                        child: Text(
+                          "${widget.textTop} \n${widget.textBottom}",
+                          style: kHeadingTextStyle.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(),
+                    ],
                   ),
-                  Container(), //
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

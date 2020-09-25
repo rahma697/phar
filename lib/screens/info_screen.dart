@@ -1,9 +1,9 @@
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phar/screens/constant.dart';
-import 'package:phar/screens/homescreen.dart';
-import 'package:phar/screens/my_header.dart';
 import 'package:phar/screens/my_header1.dart';
+
 class InfoScreen extends StatefulWidget {
   @override
   _InfoScreenState createState() => _InfoScreenState();
@@ -19,40 +19,36 @@ class _InfoScreenState extends State<InfoScreen> {
     super.initState();
     controller.addListener(onScroll);
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }
+
   void onScroll() {
     setState(() {
       offset = (controller.hasClients) ? controller.offset : 0;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         controller: controller,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-
-            MyHeader1(
-              image: "assets/rahma1.png",
+            Myheader(
+              image: "assets/ma4.png",
               textTop: "Get to know",
-              topLeftIcon: Icons.arrow_back,
               textBottom: "About Covid-19.",
               offset: offset,
-              onIconTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomeScreen()));
-              },
             ),
-
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -60,7 +56,7 @@ class _InfoScreenState extends State<InfoScreen> {
                     "The most common symptoms",
                     style: kTitleTextstyle,
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -113,6 +109,7 @@ class _InfoScreenState extends State<InfoScreen> {
     );
   }
 }
+
 class PreventCard extends StatelessWidget {
   final String image;
   final String title;
@@ -123,6 +120,7 @@ class PreventCard extends StatelessWidget {
     this.title,
     this.text,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -174,6 +172,7 @@ class PreventCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),

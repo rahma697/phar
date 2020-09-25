@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phar/models/medicament.dart';
@@ -32,11 +33,12 @@ class _CalculPageState extends State<CalculPage> {
 
   TextEditingController _presentationcontroller = TextEditingController();
   TextEditingController _posologieController = TextEditingController();
-  TextEditingController _reductionController = TextEditingController();
+  TextEditingController _reductionController = TextEditingController(text: "1");
   TextEditingController _dosage_inject_Controller = TextEditingController();
   TextEditingController _volumfinalController = TextEditingController();
   TextEditingController _reliquatContoller = TextEditingController();
-  TextEditingController _volum_after_preparation =TextEditingController();
+  TextEditingController _volum_after_preparation = TextEditingController();
+  TextEditingController _id = TextEditingController();
 
   double volume;
   double newReliquat = 0.0;
@@ -52,9 +54,11 @@ class _CalculPageState extends State<CalculPage> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     //_posologieController.text=_ordonnance.posologie?.toString();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
@@ -82,7 +86,7 @@ class _CalculPageState extends State<CalculPage> {
             Container(
               margin: EdgeInsets.only(
                   left: 190.0, right: 30.0, top: 70.0, bottom: 60.0),
-              child: Image.asset("assets/rahma4.png"),
+              child: Image.asset("assets/calcul.png"),
             ),
             Container(
               margin: EdgeInsets.only(
@@ -102,6 +106,7 @@ class _CalculPageState extends State<CalculPage> {
                       fontFamily: 'Montserrat',
                       color: Colors.white,
                       fontSize: 25.0)),
+
             ),
             Container(
               margin: EdgeInsets.only(
@@ -123,63 +128,116 @@ class _CalculPageState extends State<CalculPage> {
                         child: ListView(
                       //scrollDirection: Axis.horizontal,
                       children: <Widget>[
-                        SizedBox(
-                          height: 20,
-                        ),
-                        DropdownButton<Patient>(
-                          hint: Text('Name of Patient'),
-                          value: currentSelectedPatient,
-                          isDense: true,
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          iconSize: 30,
-                          elevation: 16,
-                          isExpanded: true,
-                          items: _listPatient
-                              .map(
-                                (patient) => DropdownMenuItem<Patient>(
-                                  child: Text(patient.name),
-                                  value: patient,
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (newValue) {
-                            setState(
-                              () {
-                                currentSelectedPatient = newValue;
-                              },
-                            );
-
-                          },
-                        ),
+//                        SizedBox(
+//                          height: 20,
+//                        ),
+//                        DropdownButton<Patient>(
+//                          hint: Text('Name of Patient'),
+//                          value: currentSelectedPatient,
+//                          isDense: true,
+//                          icon: Icon(Icons.keyboard_arrow_down),
+//                          iconSize: 30,
+//                          elevation: 16,
+//                          isExpanded: true,
+//                          items: _listPatient
+//                              .map(
+//                                (patient) => DropdownMenuItem<Patient>(
+//                                  child: Text(patient.name),
+//                                  value: patient,
+//                                ),
+//                              )
+//                              .toList(),
+//                          onChanged: (newValue) {
+//                            setState(
+//                              () {
+//                                currentSelectedPatient = newValue;
+//                              },
+//                            );
+//
+//                          },
+//                        ),
                         SizedBox(
                           height: 30,
                         ),
-                        DropdownButton<Medicament>(
-                          value: currentSelectedMedicament,
-                          isExpanded: true,
-                          isDense: true,
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          iconSize: 30,
-                          elevation: 16,
-                          hint: Text("Choose medicament"),
-                          items: _listMedicament.map((Medicament medicament) {
-                            return DropdownMenuItem<Medicament>(
-                              child: Text(
-                                  "${medicament?.title} - ${medicament.pres} ml"),
-                              value: medicament,
-                            );
-                          }).toList(),
-                          onChanged: (value) {
+                        //wait, i am going to try few things too
+
+                        DropdownSearch<Patient>(
+//                          items: _listPatient,
+                          showSearchBox: true,
+                          isFilteredOnline: false,
+                          showSelectedItem: true,
+                          label: "Patient",
+                          mode: Mode.DIALOG,
+                          selectedItem: currentSelectedPatient,
+                          onFind: (String filter) => getFilteredPatient(filter),
+                          itemAsString: (Patient patient) => patient.name,
+                          onChanged: (Patient data) {
                             setState(() {
-                              currentSelectedMedicament = value;
+                              currentSelectedPatient = data;
+                            });
+                          },
+                          compareFn: (Patient i, Patient s) => i.isEqual(s),
+                        ),
+
+                        SizedBox(
+                          height: 30,
+                        ),
+
+                        DropdownSearch<Medicament>(
+
+                          showSearchBox: true,
+                          showSelectedItem: true,
+                          isFilteredOnline: false,
+                          label: "Medicament",
+                          selectedItem: currentSelectedMedicament,
+                          mode: Mode.DIALOG,
+                          compareFn: (Medicament i, Medicament s) =>
+                              i.isEqual(s),
+                          onFind: (String filter) =>
+                              getFilteredMedicament(filter),
+                          itemAsString: (Medicament medecament) =>
+                              medecament.title,
+                          onChanged: (Medicament data) {
+                            setState(() {
+                              currentSelectedMedicament = data;
                               _laboController.text =
-                                  currentSelectedMedicament.description;
+                                  currentSelectedMedicament.laboratoire;
                               _presentationcontroller.text =
                                   currentSelectedMedicament.pres.toString();
                             });
                             //_calculate();
                           },
                         ),
+
+                        SizedBox(
+                          height: 30,
+                        ),
+//                        DropdownButton<Medicament>(
+//                          value: currentSelectedMedicament,
+//                          isExpanded: true,
+//                          isDense: true,
+//                          icon: Icon(Icons.keyboard_arrow_down),
+//                          iconSize: 30,
+//                          elevation: 16,
+//                          hint: Text("Choose medicament"),
+//                          items: _listMedicament.map((Medicament medicament) {
+//                            return DropdownMenuItem<Medicament>(
+//                              child: Text(
+//                                  "${medicament?.title} - ${medicament.pres} ml"),
+//                              value: medicament,
+//                            );
+//                          }).toList(),
+//                          onChanged: (value) {
+//                            setState(() {
+//                              currentSelectedMedicament = value;
+//                              _laboController.text =
+//                                  currentSelectedMedicament.laboratoire;
+//                              _presentationcontroller.text =
+//                                  currentSelectedMedicament.pres.toString();
+//                            });
+//                            //_calculate();
+//                          },
+//                        ),
                         SizedBox(
                           height: 20,
                         ),
@@ -220,69 +278,69 @@ class _CalculPageState extends State<CalculPage> {
                           height: 20,
                         ),
                         TextFormField(
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: "Reduction",
                             labelText: "Reduction",
                             border: OutlineInputBorder(),
                           ),
                           controller: _reductionController,
-
                         ),
                         SizedBox(
                           height: 20,
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              hintText: " Dose to inject  mg",
-                              labelText: "Dosage to inject  mg",
-                              border: OutlineInputBorder()),
-                          controller: _dosage_inject_Controller,
-                          enabled: false,
-                        ),
+//                        TextFormField(
+//                          decoration: InputDecoration(
+//                              hintText: " Dose to inject  mg",
+//                              labelText: "Dosage to inject  mg",
+//                              border: OutlineInputBorder()),
+//                          controller: _dosage_inject_Controller,
+//                          enabled: false,
+//                        ),
+                       SizedBox(
+                         height: 20,
+                       ),
+                       TextFormField(
+                         decoration: InputDecoration(
+                             hintText: " Final volum  ml",
+                             labelText: "Final volum  ml",
+                             border: OutlineInputBorder()),
+                         controller: _id,
+                         enabled: false,
+
+                       ),
+//                       /* SizedBox(
+//                          height: 20,
+//                        ),
+//                        TextFormField(
+//                          decoration: InputDecoration(
+//                              hintText: " Volum after preparation  ml",
+//                              labelText: " Volum after preparation ml",
+//                              border: OutlineInputBorder()),
+//                          controller: _volum_after_preparation,
+//                          enabled: false,
+//
+//                        ),*/
+//
+//
+//                        SizedBox(
+//                          height: 20,
+//                        ),
+//                        TextFormField(
+//                          decoration: InputDecoration(
+//                              hintText: "Leftover mg ",
+//                              labelText: "Leftover  mg",
+//                              border: OutlineInputBorder()),
+//                          controller: _reliquatContoller,
+//                          enabled: false,
+//                        ),
+
                         SizedBox(
                           height: 20,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              hintText: " Final volum  ml",
-                              labelText: "Final volum  ml",
-                              border: OutlineInputBorder()),
-                          controller: _volumfinalController,
-                          enabled: false,
-
-                        ),
-                       /* SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              hintText: " Volum after preparation  ml",
-                              labelText: " Volum after preparation ml",
-                              border: OutlineInputBorder()),
-                          controller: _volum_after_preparation,
-                          enabled: false,
-
-                        ),*/
-
-
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              hintText: "Leftover mg ",
-                              labelText: "Leftover  mg",
-                              border: OutlineInputBorder()),
-                          controller: _reliquatContoller,
-                          enabled: false,
-                        ),
-
-                        SizedBox(
-                          height: 20,
-
                         ),
                         Container(
                           child: Padding(
+
                               padding: EdgeInsets.symmetric(vertical: 16.0),
                               child: RaisedButton(
                                 shape: RoundedRectangleBorder(
@@ -315,54 +373,69 @@ class _CalculPageState extends State<CalculPage> {
   }
 
   Future<void> _calculate() async {
-    if (currentSelectedPatient != null && currentSelectedMedicament != null &&
+    if (currentSelectedPatient != null &&
+        currentSelectedMedicament != null &&
         _posologieController.text.isNotEmpty &&
-        _reductionController.text.isNotEmpty
-
-    ) {
+        _reductionController.text.isNotEmpty) {
       double dosage = currentSelectedPatient.surface *
           (double.parse((_posologieController.text ?? 0))) *
           (double.parse((_reductionController.text ?? 0)));
 
-
       volume = dosage / currentSelectedMedicament.ci;
 
+      //Check if current medicament has an ACTIVE reliquat
 
-      if(currentSelectedMedicament.reliquat > 0){
-        //current medicament 3ado reliquat
-        print("############################## MEDICAMENT HAS PREVIOUS REIQUAT #########################################");
-        double _rest = volume - currentSelectedMedicament.reliquat;
-        //check if the rest either >0 || ==0 || <0
-        if (_rest > 0){
-          //mazal volume lazem nakhadmoh, y7al flacon jdod
-          print(" LE RESTE >>>>>> 0 ");
-          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("We will use ALL the reliquat")));
-          volume = volume - currentSelectedMedicament.reliquat;
+
+
+
+      //
+
+      if (currentSelectedMedicament.reliquat > 0) {
+        DateTime reliquatDate =
+            DateTime.parse(currentSelectedMedicament.reliquatDate);
+        if (reliquatDate.difference(DateTime.now()).isNegative) {
+          //Reliquat is dead (périmé), we found a reliquat mayta lool
+          print("######   -- MEDICAMENT HAS PREVIOUS REIQUAT ---- ### ");
+          print(" ---- Reliquat is dead ---- ");
+          print(
+              "Reliqat Date : ${reliquatDate.toIso8601String()} VS NOW ${DateTime.now()}");
           _calculeVolumeAndReliquat();
-
-
-        } else if (_rest == 0){
-          //reliquat tekfi bach nakhadmi volume hada
-          print("LE  RESTE  ===========0");
-          scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("We will use ALL the reliquat, reste = 0 ")));
-          //update reliquat f la base de donnee
-          currentSelectedMedicament.reliquat = 0;
-          //
-
         } else {
-          // reliquat tekfi w tfadhel
-          print("LE RESTE <<<<<<<<<<<  0 ");
-          newReliquat = currentSelectedMedicament.reliquat - volume;
+          //current medicament 3ado reliquat w mahich dead
+          print(
+              "############################## MEDICAMENT HAS PREVIOUS REIQUAT #########################################");
+          double _rest = volume - currentSelectedMedicament.reliquat;
+          //check if the rest either >0 || ==0 || <0
+          if (_rest > 0) {
+            //mazal volume lazem nakhadmoh, y7al flacon jdod
+            //reliquat dinaha kamla fassi gdima
+            print(" LE RESTE >>>>>> 0 ");
+            scaffoldKey.currentState.showSnackBar(
+                SnackBar(content: Text("We will use ALL the reliquat")));
+            volume = volume - currentSelectedMedicament.reliquat;
+            _calculeVolumeAndReliquat();
+          } else if (_rest == 0) {
+            //reliquat tekfi bach nakhadmi volume hada
+            //reliquat dinaha fassi gdima
+            print("LE  RESTE  ===========0");
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text("We will use ALL the reliquat, reste = 0 ")));
+            //update reliquat f la base de donnee
+            currentSelectedMedicament.reliquat = 0;
+            // diri retour f phone
 
-
-
+          } else {
+            // reliquat tekfi w tfadhel
+            // dir update lel reliquat only, no date
+            print("LE RESTE <<<<<<<<<<<  0 ");
+            newReliquat = currentSelectedMedicament.reliquat - volume;
+          }
         }
       } else {
         //current medicament ma 3andouche reliqat
-        print("############################## MEDICAMENT HAS NO NO NO PREVIOUS REIQUAT #########################################");
+        print(
+            "############################## MEDICAMENT HAS NO NO NO PREVIOUS REIQUAT #########################################");
         _calculeVolumeAndReliquat();
-
-
       }
 
       //Affichage du resultat dans les champs qui correspondant
@@ -370,17 +443,15 @@ class _CalculPageState extends State<CalculPage> {
       _volumfinalController.text = volume.toString();
       _reliquatContoller.text = newReliquat.toString();
 
-
-
       _ordonnance.dosage = dosage;
       _ordonnance.patient_id = currentSelectedPatient.id;
       _ordonnance.medicament_id = currentSelectedMedicament.id;
       _ordonnance.date = DateTime.now().toString();
       _ordonnance.posologie = double.parse(_posologieController.text);
-      _ordonnance.reduction =int.parse(_reductionController.text);
+      _ordonnance.reduction = int.parse(_reductionController.text);
       _ordonnance.volum_a_administer = volume;
 
-      if (newReliquat > 0){
+      if (newReliquat > 0) {
         currentSelectedMedicament.reliquat = newReliquat;
         currentSelectedMedicament.reliquatDate = DateTime.now().toString();
         _ordonnance.reliquat = newReliquat;
@@ -397,17 +468,18 @@ class _CalculPageState extends State<CalculPage> {
       int result = await databaseHelper.insertOrdonance(_ordonnance);
       await databaseHelper.updateMedecament(currentSelectedMedicament);
 
-
-      if (result>0) {
+      if (result > 0) {
         print("yeeees");
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => DetailPage(
-          patient: currentSelectedPatient,
-          medicament: currentSelectedMedicament,
-          ordonnance: _ordonnance,
-        ),),);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => DetailPage(
+              patient: currentSelectedPatient,
+              medicament: currentSelectedMedicament,
+              ordonnance: _ordonnance,
+            ),
+          ),
+        );
       }
-
-
     }
   }
 
@@ -415,58 +487,61 @@ class _CalculPageState extends State<CalculPage> {
     //Calcule ta3 reliquat, tji after we check if there is some previous reliquat
     double reliquat = currentSelectedMedicament.volumInitial - volume;
 
-
-
-    if( reliquat > 0){
+    if (reliquat > 0) {
       print("Reliquat is >>> 0 ===> $reliquat +ml");
       //todo: mba3da naffichihom f showpage
       newReliquat = reliquat;
-    }else{
+    } else {
       print("Reliquat is <<<< 0");
       double resultOf9isma = volume / currentSelectedMedicament.volumInitial;
       //print("reliquat dakheel  else is $reliquat");
-      if((resultOf9isma % 1)==0){// reliquat is an integer
+      if ((resultOf9isma % 1) == 0) {
+        // reliquat is an integer
         print("nombre de flacon utilisé $resultOf9isma");
-        resultOf9isma=0;
+        resultOf9isma = 0;
         print("Reliquat is $resultOf9isma");
-      }else{
-
+      } else {
         double fraction = reliquat - reliquat.truncate();
         print("flacon $reliquat");
         //truncate() function for double type which returns the integer part discarding the fractional part.
-        double tahwil= fraction*currentSelectedMedicament.volumInitial;
+        double tahwil = fraction * currentSelectedMedicament.volumInitial;
         reliquat = currentSelectedMedicament.volumInitial - tahwil;
-        print( "reliquat final $reliquat");
+        print("reliquat final $reliquat");
 
 //        print("srface ${currentSelectedPatient.surface}");
 //        print("c_minimal ${currentSelectedMedicament.cmn} ");
 //        print("c_maximal ${currentSelectedMedicament.cmx}");
         print("tahwil $tahwil");
         print("vvol ${currentSelectedMedicament.volumInitial}");
-
       }
       _reliquatContoller.text = reliquat.toString();
       newReliquat = reliquat;
     }
 
-    if (volume >=
-        currentSelectedMedicament.cmn * 250 &&
-        volume <=
-            250 * currentSelectedMedicament.cmx) {
+    if (volume >= currentSelectedMedicament.cmn * 250 &&
+        volume <= 250 * currentSelectedMedicament.cmx) {
       print("use a serum bag of 250 ml");
       _ordonnance.type_poche = 250;
-
-    } else if (volume >=
-        currentSelectedMedicament.cmn * 500 &&
-        volume <=
-            500 * currentSelectedMedicament.cmx) {
-
+    } else if (volume >= currentSelectedMedicament.cmn * 500 &&
+        volume <= 500 * currentSelectedMedicament.cmx) {
       print("use a serum bag of 500 ml");
       _ordonnance.type_poche = 500;
     } else {
       //Sinn
       _ordonnance.type_poche = 1000;
-
     }
+  }
+
+  Future<List<Patient>> getFilteredPatient(String filter) {
+    List<Patient> tempList =
+        _listPatient.where((element) => element.name.contains(filter)).toList();
+    return Future.value(tempList);
+  }
+
+  Future<List<Medicament>> getFilteredMedicament(String filter) {
+    List<Medicament> tempList = _listMedicament
+        .where((element) => element.title.contains(filter))
+        .toList();
+    return Future.value(tempList);
   }
 }

@@ -22,7 +22,7 @@ class Medicament {
 
   int get id => _id;
   String get title => _Name;
-  String get description => _labo;
+  String get laboratoire => _labo;
 
   int get priority => _priority;
   String get date => _date;
@@ -36,6 +36,7 @@ class Medicament {
   double get reliquat =>_reliquat;
   String get reliquatDate => _reliquatDate;
 
+  //kechma kayna get laobb ?
 
 
 
@@ -155,6 +156,11 @@ class Medicament {
     this._sta=double.parse(map['sta'].toString());
     this._reliquat= double.parse(map['reliquat'].toString() ?? 0);
 
+  }
+
+  //custom comparing function to check if two users are equal
+  bool isEqual(Medicament model) {
+    return this?.id == model?.id;
   }
 }
 

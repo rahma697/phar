@@ -97,7 +97,7 @@ class DatabaseHelper {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + 'pharmacal.db';
 
-//    if (kDebugMode) deleteDatabase(path);
+//   if (kDebugMode) deleteDatabase(path);
 
     // Open/create the database at a given path
     var notesDatabase =
@@ -133,8 +133,8 @@ class DatabaseHelper {
 
     //*****************************************INSERT ADMIN OF THE APP*********************************************
     User admin = User(
-      "Bichi",
-      "bicho",
+      "test",
+      "rahma",
       "123456",
     );
     await db.insert(_tableUser, admin.toMap());
@@ -165,7 +165,7 @@ class DatabaseHelper {
           ' $_lefteover_colDate TEXT, '
           ' $_lefteover_colreliquat INTEGER, '
           ' $_lefteover_colMedicament INTEGER NOT NULL, '
-          'FOREIGN KEY($_ordonnace_colMedicament) REFERENCES $_medicamentTable($_colId) ' //jed virgule hna tani, f lakher lazem tetna7a
+          'FOREIGN KEY($_ordonnace_colMedicament) REFERENCES $_medicamentTable($_colId) '
           ')'
       ,
     );
@@ -340,6 +340,9 @@ class DatabaseHelper {
 
     return leftoverList ;
   }
+
+
+
 
   Future<int> deleteLeftover(int id) async {
     var db = await this.database;

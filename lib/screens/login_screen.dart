@@ -21,14 +21,14 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        padding: EdgeInsets.only(top: 10, left: 40, right: 40),
+        padding: EdgeInsets.only(top: 15, left: 40, right: 40),
         color: Colors.grey[200],
         child: ListView(
           children: <Widget>[
             SizedBox(
               width: 350,
               height: 250,
-              child: Image.asset("assets/pharm1.jpg"),
+              child: Image.asset("assets/login.png"),
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 15),

@@ -170,6 +170,7 @@ class MedicamentListState extends State<MedicamentList> {
       padding: EdgeInsets.only(top: 50.0),
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
+
         return Card(
           color: Colors.white,
           elevation: 2.0,
@@ -181,7 +182,7 @@ class MedicamentListState extends State<MedicamentList> {
             ),
             subtitle: Row(
               children: <Widget>[
-                Text(this.medicamentList[position].date),
+                Text(this.medicamentList[position].laboratoire),
               ],
             ),
             trailing: GestureDetector(

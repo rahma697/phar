@@ -55,4 +55,9 @@ class Patient {
 
     return map;
   }
+
+  //custom comparing function to check if two users are equal
+  bool isEqual(Patient model) {
+    return this?.id == model?.id;
+  }
 }

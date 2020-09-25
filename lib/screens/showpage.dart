@@ -95,13 +95,13 @@ class DetailPageState extends State<DetailPage> {
                         ))),
                         SizedBox(height: 30),
                         FadeAnimation(4,PatientCard(
-                          text: "body surface of a patient",
+                          text: " body surface: ${widget.patient.surface}",
                           image: "assets/marw2.png",
                           title: widget.patient.name,
                         )),
                         if (widget.ordonnance.type_poche == 1000)
                         FadeAnimation(5,PatientCard(
-                          text: "ggdgg poche raki kbira dabar rassek",
+                          text: "less than 250 or greater than 500",
                           image: "assets/marw4.png",
                           title: "serum bag",
                         )),
@@ -114,31 +114,26 @@ class DetailPageState extends State<DetailPage> {
                         SizedBox(height:5),
                         FadeAnimation(6,CalculatedCard(
                           number: widget.ordonnance.dosage,
+
                           image: "assets/mar3.png",
-                          title: "required dose",
+                          title: "required dose(mg)",
                         )),
-                        //Hadi yaffichiha only if reliquat > 0 mfhmtch
-                        //na9adro nakhamo b if dakhal list w clumn
-                        //ana gotlo ida reliquat >> 0 zidli hado f afichage berk
-                        //dok nbadal haja njarbo
-                        // if reliquat > 0 ya3i kayan yzid wech kayan dakhal [} sinn ida reliquat 0 ma yzidech sema dkhal f else hakda habit tgol
-                        // ya3ni, malgre mekanech else, besah condition ki tkoun m7a9a ydirha, sinn ma ydirech dcr
                         if (widget.ordonnance.reliquat > 0) ...[
                           SizedBox(height: 20),
                           FadeAnimation(7,CalculatedCard(
-                            number: widget.medicament.reliquat,
+
+                            number: widget.medicament.reliquat ,
                             image: "assets/marw5.png",
-                            title: "Leftover ",
+                            title: "Leftover(ml)",
                           )),
                           SizedBox(height: 10),
-                          //hmm hadi fiha choui 7ssab  ak tahder 3la axporation .... ?yup whdyiri diri return
+
                           FadeAnimation(7,PatientCard(
                             text: "${DateTime.parse(widget.medicament.reliquatDate).add(Duration(hours: widget.medicament.sta.toInt()))}",
                             image: "assets/marw1.png",
                             title: "expiration date",
                           )),
                         ],
-
 
                       ],
                     ),
@@ -148,9 +143,7 @@ class DetailPageState extends State<DetailPage> {
             ),
           ],
         ),
-
       ),
-
     );
   }
 }

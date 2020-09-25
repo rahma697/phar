@@ -1,24 +1,18 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:phar/screens/constant.dart';
+import 'package:phar/screens/foldable.dart';
 import 'package:phar/screens/info_screen.dart';
-
-import 'homescreen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyHeader extends StatefulWidget {
   final String image;
   final String textTop;
   final String textBottom;
   final double offset;
-  final IconData topRightIcon;
-  final IconData topLeftIcon;
-
-  final Color iconColor;
-  final VoidCallback onIconTap;
-
   const MyHeader(
-      {Key key, this.image, this.textTop, this.textBottom, this.offset, this.topRightIcon,this.topLeftIcon, this.iconColor = Colors.white, this.onIconTap,
-      })
+      {Key key, this.image, this.textTop, this.textBottom, this.offset})
       : super(key: key);
 
   @override
@@ -31,7 +25,7 @@ class _MyHeaderState extends State<MyHeader> {
     return ClipPath(
       clipper: MyClipper(),
       child: Container(
-        padding: EdgeInsets.only(left: 50, top:50, right: 20),
+        padding: EdgeInsets.only(left: 40, top: 50, right: 20),
         height: 350,
         width: double.infinity,
         decoration: BoxDecoration(
@@ -45,62 +39,54 @@ class _MyHeaderState extends State<MyHeader> {
               Colors.white,
             ],
           ),
-
           image: DecorationImage(
-            image: AssetImage("assets/ma11.png"),
+            image: AssetImage("assets/virus.png"),
           ),
         ),
-        child: Stack(
+        child:
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-//            Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//          children: <Widget>[
-//            Container(
-//                margin: EdgeInsets.only(left: 1.0, top: 0.0),
-//                child: IconButton(icon: Icon(Icons.arrow_back_ios,  color: Colors.white),
-//
-//                    onPressed: () {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(
-//                          builder: (context) {
-//                            return HomeScreen();
-//                          },
-//                        ),
-//                      );
-//
-//                    }
-//
-//                )
-//            ),
-//]
-//            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.only(left: 1.0, top: 0.0),
+                      child: IconButton(icon: Icon(Icons.arrow_back_ios,  color: Colors.white),
 
-//        Row(
-//
-//          children: <Widget>[
-//
-//            Align(
-//              alignment: Alignment.topRight,
-//              child: GestureDetector(
-//                child: Icon(widget.topRightIcon, color:Colors.black,size: 30,),
-//                onTap: widget.onIconTap,
-//              ),
-//            ),
-//            Align(
-//              alignment: Alignment.topLeft,
-//              child: GestureDetector(
-//                child: Icon(widget.topLeftIcon, color:Colors.black,size: 30,),
-//                onTap: widget.onIconTap,
-//              ),
-//            ),
-//
-//          ],
-//        ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return MyHomePage();
+                                },
+                              ),
+                            );
+                          }
+                      )
+                  ),
+                  Container(
 
+                      child: IconButton(icon: Icon(Icons.arrow_forward_ios,  color: Colors.white),
 
-
-            SizedBox(height: 10),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return InfoScreen();
+                                },
+                              ),
+                            );
+                          }
+                      )
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
             Expanded(
               child: Stack(
                 children: <Widget>[
@@ -108,23 +94,22 @@ class _MyHeaderState extends State<MyHeader> {
                     top: (widget.offset < 0) ? 0 : widget.offset,
                     child: Image.asset(
                       widget.image,
-                      width: 150,
+                      width: 180,
                       fit: BoxFit.fitWidth,
                       alignment: Alignment.topLeft,
                     ),
                   ),
                   Positioned(
-                    top: 50 - widget.offset / 2,
-                    left: 150,
+                    top: 20 - widget.offset / 2,
+                    left: 160,
                     child: Text(
                       "${widget.textTop} \n${widget.textBottom}",
                       style: kHeadingTextStyle.copyWith(
                         color: Colors.white,
-                        fontSize: 20.00,
                       ),
                     ),
                   ),
-                  Container(), //
+                  Container(),
                 ],
               ),
             ),
