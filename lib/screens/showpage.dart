@@ -115,14 +115,14 @@ class DetailPageState extends State<DetailPage> {
                         FadeAnimation(6,CalculatedCard(
                           number: widget.ordonnance.dosage,
 
-                          image: "assets/mar3.png",
+                          image: "assets/mar3.png"                ,
                           title: "required dose(mg)",
                         )),
                         if (widget.ordonnance.reliquat > 0) ...[
                           SizedBox(height: 20),
                           FadeAnimation(7,CalculatedCard(
 
-                            number: widget.medicament.reliquat ,
+                            number: widget.medicament.reliquat              ,
                             image: "assets/marw5.png",
                             title: "Leftover(ml)",
                           )),
@@ -173,7 +173,7 @@ class PatientCard extends StatelessWidget {
               height: 100,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20)    ,
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
